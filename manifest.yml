@@ -2,9 +2,15 @@
 # exposes NodePort Service with auto assigned nodePort
 ---
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-env
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: dadjokes-service
+  namespace: dev-env
   labels:
     app: dadjokes
 spec:
@@ -20,6 +26,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dadjokes-deployment
+  namespace: dev-env
 spec:
   replicas: 2
   selector:
@@ -39,7 +46,8 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
- name: hpa-dadjokes
+  name: hpa-dadjokes
+  namespace: dev-env
 spec:
  scaleTargetRef:
    apiVersion: apps/v1
@@ -53,11 +61,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dadjokes-ingress
+  namespace: dev-env
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: dadjokes.example.com
+  - host: dadjokes.bala.com
     http:
       paths:
       - path: /
